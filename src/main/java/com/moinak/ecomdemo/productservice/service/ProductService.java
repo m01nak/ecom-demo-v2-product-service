@@ -17,6 +17,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
+
+
     public void createProduct (ProductRequest productRequest) {
         Product product = Product.builder()
                 .name(productRequest.getName())
@@ -30,7 +32,7 @@ public class ProductService {
     }
 
     public List<ProductResponse> getAllProducts() {
-        List<ProductResponse> productResponses = productRepository.findAll().stream().map(this::mapToProductResponse).toList();
+        return productRepository.findAll().stream().map(this::mapToProductResponse).toList();
     }
 
     private ProductResponse mapToProductResponse(Product product) {
