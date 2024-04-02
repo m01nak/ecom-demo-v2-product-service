@@ -74,21 +74,36 @@ class ProductServiceApplicationTests {
 					.post("/api/product")
 					.contentType(MediaType.APPLICATION_JSON)
 					.content(objectMapper.writeValueAsString(requestOne)))
-				.andExpect(status().isOk());
+				.andExpect(status().isCreated());
 
 		mockMvc.perform(MockMvcRequestBuilders
 						.post("/api/product")
 						.contentType(MediaType.APPLICATION_JSON)
 						.content(objectMapper.writeValueAsString(requestTwo)))
-				.andExpect(status().isOk());
+				.andExpect(status().isCreated());
 
 		mockMvc.perform(MockMvcRequestBuilders
-					.get("/api/product")).
+					.get("/api/product"))
+				.andExpect(status().isOk());
+
+		Assertions.assertEquals(2, productRepository.findAll().size());
 	}
 
 	@Test
-	void testDeleteAllProducts() {
-		mockMvc.perform()
+	void testDeleteAllProducts() throws Exception {
+		ProductRequest request = getProductRequest("sample-product", "sample-product", 123.321);
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/api/product")
+					.contentType(MediaType.APPLICATION_JSON)
+					.content(objectMapper.writeValueAsString(request)))
+				.andExpect(status().isCreated());
+
+		Assertions.assertEquals(1, productRepository.findAll().size());
+
+		mockMvc.perform(MockMvcRequestBuilders.delete("/api/product"))
+				.andExpect(status().isOk());
+
+		Assertions.assertEquals(0, productRepository.findAll().size());
 	}
 
 	private ProductRequest getProductRequest(String name, String description, double price) {
