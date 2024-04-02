@@ -41,4 +41,8 @@ public class ProductService {
                 .price(product.getPrice())
                 .build();
     }
+
+    public void deleteAllProducts() {
+        productRepository.deleteAll();
+    }
 }
